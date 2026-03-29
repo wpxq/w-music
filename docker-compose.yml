@@ -1,0 +1,34 @@
+services:
+  api:
+    build: 
+      context: ./backend
+    container_name: w-audio-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./music:/app/music
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: "256M"
+  web:
+    build: 
+      context: ./frontend
+    container_name: w-audio-web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - api
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
