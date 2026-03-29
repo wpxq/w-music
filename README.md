@@ -19,7 +19,7 @@
 ## Architecture
 - **Frontend**: `Next.js` - Port:`3000`
 - **Backend**: `FastAPI` - Port: `8000`
-- **Music**: Mounted into `/app/music`
+- **Music**: Mounted to `/app/music`
 
 ## Docker Limits
 - **Web**: 512MB RAM, 0.5 CPU
