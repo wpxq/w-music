@@ -38,7 +38,7 @@ If you're curious about what's going on inside or want to debug it locally:
 - Python 3.11-slim
 - FastAPI (Web framework)
 - Uvicorn (ASGI server)
-- Mutagen (FLAC metadata parser)
+- Mutagen (Audio metadata parser)
 
 **Frontend:**
 - Node.js 18+ (Next.js 14)
