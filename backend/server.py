@@ -2,7 +2,7 @@ import os, uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from mutagen.flac import FLAC
+from mutagen import File
 from datetime import datetime
 
 app = FastAPI()
@@ -25,25 +25,32 @@ def list_playlists():
     return {"playlists": sorted(playlists)}
 
 @app.get("/playlists/{name}")
-def track_from_playlist(name: str):
+def get_tracks(name: str):
     playlist_path = os.path.join(music_dir, name)
     if not os.path.exists(playlist_path):
-        raise HTTPException(status_code=404, detail="Playlist does not exist")
+        raise HTTPException(status_code=404, detail="Playlist neexistuje")
 
     tracks = []
     for filename in os.listdir(playlist_path):
-        if filename.endswith(".flac"):
+        if any(filename.lower().endswith(ext) for ext in [".flac", ".mp3", ".wav", ".m4a", ".ogg"]):
             f_path = os.path.join(playlist_path, filename)
             mtime = os.path.getmtime(f_path)
             date_added_str = datetime.fromtimestamp(mtime).isoformat()
+            
             try:
-                audio = FLAC(f_path)
+                audio = File(f_path, easy=True) 
+                
+                duration = 0
+                if audio and audio.info:
+                    duration = int(audio.info.length)
+                
                 tracks.append({
                     "id": f"{name}/{filename}",
-                    "title": audio.get("title", [filename])[0],
-                    "artist": audio.get("artist", ["Unknown"])[0],
+                    "title": audio.get("title", [filename])[0] if audio else filename,
+                    "artist": audio.get("artist", ["Unknown"])[0] if audio else "Unknown",
                     "date_added": date_added_str,
-                    "duration": int(audio.info.length)
+                    "duration": duration,
+                    "url": f"/stream-files/{name}/{filename}"
                 })
             except Exception:
                 tracks.append({
@@ -51,7 +58,8 @@ def track_from_playlist(name: str):
                     "title": filename, 
                     "artist": "Unknown", 
                     "date_added": date_added_str,
-                    "duration": 0
+                    "duration": 0,
+                    "url": f"/stream-files/{name}/{filename}"
                 })
     return {"tracks": tracks}
 

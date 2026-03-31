@@ -4,17 +4,19 @@
 
 ---
 
-`wmusic` is a minimalist FLAC streamer running on Docker.
+`wmusic` is a minimalist streamer running on Docker.
 
 ---
 
 ## Features
 - **Lightweight**: Minimal system requirements thanks to Docker limits.
 - **Auto-Playlist**: Folders in `/app/music` are automatically converted to playlists.
-- **Lossless Audio**: Full support for FLAC streaming without compression.
 - **Searching**: Instant search for songs and artists.
 - **Sorting**: Tracks the date files were added to your library.
 - **Minimalist UI**: Modern interface without unnecessary clutter and ads. 
+
+## Audio Support
+- **Formats**: FLAC, MP3, WAV, M4A, OGG
 
 ## Architecture
 - **Frontend**: `Next.js` - Port:`3000`
